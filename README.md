@@ -33,9 +33,10 @@
 ### Why this feels useful
 
 - Save snippets before they get lost in old chats, notes, or random files.
-- Search and explore shared code in one clean place.
+- Search and explore shared code with level, source, language, and quick-tag filters.
 - Group snippets into collections when a project grows.
-- Sign in with GitHub or Google and start quickly.
+- Use the built-in starter library with 100 ready-to-browse snippets.
+- Sign in with GitHub or Google and start quickly, or save snippets locally without auth.
 - Share code in a clean format with syntax highlighting and voting.
 
 ---
@@ -47,14 +48,20 @@ flowchart TD
     A([Open CodeShare Hub]) --> B{What do you want to do?}
     B --> C[Explore public snippets]
     B --> D[Sign in with GitHub or Google]
+    B --> N[Save a snippet locally without auth]
     D --> E[Create a new snippet]
     D --> F[Build a collection]
     C --> G[Open a snippet page]
+    C --> O[Use level, source, tag, and search filters]
     E --> H[Add title, code, tags, and language]
     H --> I[Publish or keep it personal]
+    N --> P[Store snippet in the current browser only]
+    O --> Q[Preview code instantly inside Explore]
     G --> J[Upvote, share, or reuse]
     F --> K[Organize snippets by topic or project]
     I --> L[Grow your own code library]
+    P --> L
+    Q --> L
     J --> L
     K --> L
     L --> M([Come back faster next time])
@@ -84,6 +91,10 @@ flowchart TD
 ## 🌟 Main features
 
 - **Fast sharing** — create a snippet with title, code, tags, and language.
+- **100-snippet starter library** — explore a large built-in catalog immediately, even before the database has content.
+- **Advanced discovery** — search across title, description, tags, code, level, and source with best-match ranking.
+- **Interactive preview** — inspect the active snippet inline from Explore before opening the full page.
+- **Guest-friendly creation** — save snippets without auth directly to local browser storage.
 - **Clean reading** — syntax highlighting makes snippets easy to scan.
 - **Community feel** — explore public snippets, vote, and share links.
 - **Collections** — keep related snippets together.
@@ -115,6 +126,8 @@ cp .env.example .env.local
 | `NEXTAUTH_SECRET` | Secret used by NextAuth |
 | `GITHUB_CLIENT_ID` / `GITHUB_CLIENT_SECRET` | GitHub login |
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | Google login |
+
+> No auth configured yet? You can still create snippets in guest mode — they will be saved only to your current browser via local storage.
 
 ### 3) Start the app
 
@@ -176,6 +189,12 @@ These are the **20 exact topics** prepared for repository discovery and also mir
 CodeShare Hub helps you stop losing useful code.
 
 Instead of digging through old files or chat messages, you can keep your best snippets in one calm place, give them tags, put them in collections, and share them when someone needs help.
+
+Now it also includes:
+
+- a built-in library of 100 starter snippets,
+- richer search with level/source/tag filters and instant preview,
+- and guest snippet creation that saves only in the browser when you are not signed in.
 
 ---
 

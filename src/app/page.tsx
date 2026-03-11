@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { Code2, Search, Zap, Users, Star, ArrowRight } from 'lucide-react';
 import SnippetCard from '@/components/SnippetCard';
 import { Snippet } from '@/types';
+import { getLibraryTrendingSnippets } from '@/lib/snippet-library';
 
 async function getTrendingSnippets(): Promise<Snippet[]> {
   try {
@@ -9,11 +10,11 @@ async function getTrendingSnippets(): Promise<Snippet[]> {
     const res = await fetch(`${baseUrl}/api/snippets?sort=popular&limit=6`, {
       cache: 'no-store',
     });
-    if (!res.ok) return [];
+    if (!res.ok) return getLibraryTrendingSnippets(6);
     const data = await res.json();
-    return data.snippets || [];
+    return data.snippets?.length ? data.snippets : getLibraryTrendingSnippets(6);
   } catch {
-    return [];
+    return getLibraryTrendingSnippets(6);
   }
 }
 
@@ -62,9 +63,9 @@ export default async function HomePage() {
       <section className="py-16 px-4 border-y border-gray-800">
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
-            { icon: Code2, title: '50+ Languages', desc: 'Syntax highlighting for all major programming languages' },
+            { icon: Code2, title: '100+ Ready Snippets', desc: 'A starter library plus community code for faster exploration' },
             { icon: Users, title: 'Community Driven', desc: 'Upvote, collect, and share snippets with other developers' },
-            { icon: Star, title: 'Smart Collections', desc: 'Organize snippets into public or private collections' },
+            { icon: Star, title: 'Guest Friendly', desc: 'Save browser-only snippets without signing in, or publish with auth' },
           ].map((feature) => (
             <div key={feature.title} className="text-center">
               <div className="inline-flex p-3 bg-indigo-600/20 rounded-xl mb-4">

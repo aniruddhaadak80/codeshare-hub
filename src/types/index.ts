@@ -15,6 +15,9 @@ export interface Snippet {
   collectionId?: string;
   createdAt: string;
   updatedAt: string;
+  href?: string;
+  source?: 'community' | 'library' | 'local';
+  level?: 'Beginner' | 'Intermediate' | 'Advanced';
 }
 
 export interface Collection {
