@@ -11,8 +11,10 @@ import { Snippet, LANGUAGES } from '@/types';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { LIBRARY_SNIPPETS } from '@/lib/snippet-library';
 import { getLocalSnippets } from '@/lib/local-snippets';
+import { inferSnippetLevel } from '@/lib/snippet-meta';
 
 const LEVELS: NonNullable<Snippet['level']>[] = ['Beginner', 'Intermediate', 'Advanced'];
+const COMMUNITY_FETCH_LIMIT = 24;
 const SOURCE_OPTIONS: Array<{ value: 'all' | NonNullable<Snippet['source']>; label: string }> = [
   { value: 'all', label: 'All sources' },
   { value: 'community', label: 'Community' },
@@ -31,8 +33,10 @@ const enrichCommunitySnippet = (snippet: Snippet): Snippet => ({
   ...snippet,
   href: snippet.href || `/snippet/${snippet._id}`,
   source: snippet.source || 'community',
-  level: snippet.level || (snippet.code.split('\n').length > 12 ? 'Advanced' : snippet.code.split('\n').length > 6 ? 'Intermediate' : 'Beginner'),
+  level: snippet.level || inferSnippetLevel(snippet.code, snippet.tags),
 });
+
+const ENRICHED_LIBRARY_SNIPPETS = LIBRARY_SNIPPETS.map(enrichCommunitySnippet);
 
 const getSearchScore = (snippet: Snippet, terms: string[]) => {
   if (terms.length === 0) return snippet.upvotes + snippet.views;
@@ -72,7 +76,7 @@ function ExploreContent() {
     const loadSnippets = async () => {
       setLoading(true);
       try {
-        const res = await fetch('/api/snippets?limit=100&sort=popular');
+        const res = await fetch(`/api/snippets?limit=${COMMUNITY_FETCH_LIMIT}&sort=popular`);
         const data = res.ok ? await res.json() : { snippets: [] };
         setCommunitySnippets((data.snippets || []).map(enrichCommunitySnippet));
       } catch (error) {
@@ -102,8 +106,15 @@ function ExploreContent() {
   }, [pathname]);
 
   const allSnippets = useMemo(() => {
-    const merged = [...localSnippets, ...LIBRARY_SNIPPETS.map(enrichCommunitySnippet), ...communitySnippets];
-    return merged.filter((snippet, index) => merged.findIndex((item) => item._id === snippet._id) === index);
+    const merged = [...localSnippets, ...ENRICHED_LIBRARY_SNIPPETS, ...communitySnippets];
+    const seen = new Set<string>();
+    return merged.filter((snippet) => {
+      if (seen.has(snippet._id)) {
+        return false;
+      }
+      seen.add(snippet._id);
+      return true;
+    });
   }, [communitySnippets, localSnippets]);
 
   const searchTerms = useMemo(() => splitSearchTerms(search), [search]);
@@ -170,7 +181,7 @@ function ExploreContent() {
     }
 
     const stillVisible = filteredSnippets.some((snippet) => snippet._id === selectedSnippetId);
-    if (!stillVisible) {
+    if (!stillVisible && filteredSnippets[0]) {
       setSelectedSnippetId(filteredSnippets[0]._id);
     }
   }, [filteredSnippets, selectedSnippetId]);

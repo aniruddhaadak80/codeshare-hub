@@ -51,7 +51,7 @@ export default function CreatePage() {
       const tags = form.tags.split(',').map(t => t.trim()).filter(Boolean);
 
       if (!session) {
-        const localSnippet = createLocalSnippet({ ...form, tags: tags.join(', ') });
+        const localSnippet = createLocalSnippet({ ...form, tags });
         clearSnippetDraft();
         setMessage('Saved to this browser only. You can still sign in later to publish new snippets.');
         setForm(initialForm);

@@ -1,4 +1,5 @@
 import { Snippet } from '@/types';
+import { inferSnippetLevel } from './snippet-meta';
 
 const LOCAL_SNIPPETS_KEY = 'codeshare-hub.local-snippets';
 const LOCAL_DRAFT_KEY = 'codeshare-hub.snippet-draft';
@@ -12,6 +13,10 @@ type DraftSnippet = {
   isPublic: boolean;
 };
 
+type LocalSnippetInput = Omit<DraftSnippet, 'tags'> & {
+  tags: string | string[];
+};
+
 const safeParse = <T>(value: string | null, fallback: T): T => {
   if (!value) return fallback;
 
@@ -23,14 +28,6 @@ const safeParse = <T>(value: string | null, fallback: T): T => {
 };
 
 const isBrowser = () => typeof window !== 'undefined';
-
-const inferLevel = (code: string, tags: string[]): NonNullable<Snippet['level']> => {
-  const complexityScore = code.split('\n').length + tags.length * 2;
-
-  if (complexityScore >= 20) return 'Advanced';
-  if (complexityScore >= 10) return 'Intermediate';
-  return 'Beginner';
-};
 
 export const loadSnippetDraft = (): DraftSnippet | null => {
   if (!isBrowser()) return null;
@@ -57,15 +54,18 @@ const saveLocalSnippets = (snippets: Snippet[]) => {
   window.localStorage.setItem(LOCAL_SNIPPETS_KEY, JSON.stringify(snippets));
 };
 
-export const createLocalSnippet = (input: DraftSnippet) => {
+export const createLocalSnippet = (input: LocalSnippetInput) => {
   const now = new Date().toISOString();
-  const tags = input.tags
-    .split(',')
-    .map((tag) => tag.trim())
-    .filter(Boolean);
+  const tags = Array.isArray(input.tags)
+    ? input.tags
+    : input.tags
+        .split(',')
+        .map((tag) => tag.trim())
+        .filter(Boolean);
+  const fallbackIdSuffix = `${Math.random().toString(36).slice(2, 8)}-${Math.floor((typeof performance !== 'undefined' ? performance.now() : 0) * 1000)}`;
   const id = typeof crypto !== 'undefined' && 'randomUUID' in crypto
     ? `local-${crypto.randomUUID()}`
-    : `local-${Date.now()}`;
+    : `local-${Date.now()}-${fallbackIdSuffix}`;
 
   const snippet: Snippet = {
     _id: id,
@@ -84,7 +84,7 @@ export const createLocalSnippet = (input: DraftSnippet) => {
     updatedAt: now,
     href: `/snippet/local/${id}`,
     source: 'local',
-    level: inferLevel(input.code, tags),
+    level: inferSnippetLevel(input.code, tags),
   };
 
   const existing = getLocalSnippets().filter((item) => item._id !== snippet._id);
