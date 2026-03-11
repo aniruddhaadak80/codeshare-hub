@@ -44,6 +44,27 @@ const features = [
   },
 ];
 
+function StatsGrid({ variant = 'default' }: { variant?: 'default' | 'compact' }) {
+  const cardClassName =
+    variant === 'compact'
+      ? 'rounded-2xl border border-white/10 bg-white/5 p-4 text-center'
+      : 'rounded-2xl border border-white/10 bg-white/[0.03] p-5';
+
+  const valueClassName = variant === 'compact' ? 'text-2xl font-bold text-white' : 'text-3xl font-semibold text-white';
+  const labelClassName = variant === 'compact' ? 'mt-1 text-xs text-slate-400' : 'mt-2 text-sm text-slate-400';
+
+  return (
+    <div className="grid grid-cols-3 gap-3 sm:gap-4">
+      {stats.map((stat) => (
+        <div key={stat.label} className={cardClassName}>
+          <div className={valueClassName}>{stat.value}</div>
+          <div className={labelClassName}>{stat.label}</div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 async function getTrendingSnippets(): Promise<Snippet[]> {
   try {
     const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
@@ -140,14 +161,7 @@ export default async function HomePage() {
                         Browse polished code cards with language badges, tags, and quick stats in one glance.
                       </p>
                     </div>
-                    <div className="grid grid-cols-3 gap-3">
-                      {stats.map((stat) => (
-                        <div key={stat.label} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
-                          <div className="text-2xl font-bold text-white">{stat.value}</div>
-                          <div className="mt-1 text-xs text-slate-400">{stat.label}</div>
-                        </div>
-                      ))}
-                    </div>
+                    <StatsGrid variant="compact" />
                     <div className="rounded-2xl border border-fuchsia-400/20 bg-fuchsia-500/10 p-4 text-sm text-fuchsia-100">
                       <div className="flex items-center gap-2 font-medium">
                         <Globe2 className="h-4 w-4" />
@@ -162,13 +176,8 @@ export default async function HomePage() {
               </div>
             </div>
 
-            <div className="mt-10 grid gap-4 border-t border-white/10 pt-8 sm:grid-cols-3">
-              {stats.map((stat) => (
-                <div key={stat.label} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-                  <div className="text-3xl font-semibold text-white">{stat.value}</div>
-                  <p className="mt-2 text-sm text-slate-400">{stat.label}</p>
-                </div>
-              ))}
+            <div className="mt-10 border-t border-white/10 pt-8">
+              <StatsGrid />
             </div>
           </div>
         </div>
@@ -233,7 +242,7 @@ export default async function HomePage() {
             <div>
               <div className="inline-flex items-center gap-2 rounded-full border border-indigo-400/20 bg-indigo-500/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-indigo-200">
                 <Star className="h-3.5 w-3.5" />
-                This week&apos;s highlights
+                This week’s highlights
               </div>
               <h2 className="mt-4 text-3xl font-bold text-white">Trending Snippets</h2>
               <p className="mt-2 text-sm text-slate-400">Most popular code snippets in the community right now.</p>
