@@ -12,6 +12,7 @@ import {
   Zap,
 } from 'lucide-react';
 import SnippetCard from '@/components/SnippetCard';
+import { getBaseUrl } from '@/lib/getBaseUrl';
 import { Snippet } from '@/types';
 import { getLibraryTrendingSnippets } from '@/lib/snippet-library';
 
@@ -68,7 +69,7 @@ function StatsGrid({ variant = 'default' }: { variant?: 'default' | 'compact' })
 
 async function getTrendingSnippets(): Promise<Snippet[]> {
   try {
-    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+    const baseUrl = getBaseUrl();
     const res = await fetch(`${baseUrl}/api/snippets?sort=popular&limit=6`, {
       cache: 'no-store',
     });

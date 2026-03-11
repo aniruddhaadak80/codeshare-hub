@@ -3,11 +3,12 @@ import { authOptions } from '@/lib/auth';
 import SnippetCard from '@/components/SnippetCard';
 import { User, Code2 } from 'lucide-react';
 import Image from 'next/image';
+import { getBaseUrl } from '@/lib/getBaseUrl';
 import { Snippet } from '@/types';
 
 async function getUserSnippets(): Promise<Snippet[]> {
   try {
-    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+    const baseUrl = getBaseUrl();
     const res = await fetch(`${baseUrl}/api/snippets?limit=20`, { cache: 'no-store' });
     if (!res.ok) return [];
     const data = await res.json();
