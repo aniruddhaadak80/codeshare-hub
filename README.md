@@ -86,10 +86,64 @@ flowchart TD
 
 ---
 
+## 📦 200 built-in starter snippets
+
+The library ships **40 practical topics**, each available in **5 languages** (JavaScript, TypeScript, Python, Go, SQL) — **200 snippets** ready to explore on first load.
+
+<details>
+<summary><strong>View all 40 topics</strong></summary>
+
+| # | Topic | Level | Focus |
+|---|-------|-------|-------|
+| 1 | Debounced Search Handler | Intermediate | debounced lookups in fast-moving search forms |
+| 2 | Pagination Range Builder | Beginner | friendly pagination controls for listing pages |
+| 3 | Retry Helper | Intermediate | small retry wrappers for flaky async work |
+| 4 | Rate Limit Guard | Advanced | basic throttling around public endpoints |
+| 5 | Cache Key Factory | Beginner | stable cache keys for snippets and filters |
+| 6 | Theme Toggle State | Beginner | remembering interface preferences in apps |
+| 7 | Clipboard Copy Action | Beginner | copy actions with quick success feedback |
+| 8 | Inline Form Validator | Intermediate | clear validation for snippet creation forms |
+| 9 | Slug Generator | Beginner | readable URLs for content and snippets |
+| 10 | Group By Tag | Intermediate | grouping snippets by topic and label |
+| 11 | Diff Highlighter | Advanced | showing before and after code states clearly |
+| 12 | Environment Reader | Beginner | bootstrapping services with clear defaults |
+| 13 | Query Builder | Intermediate | combining filter state into a single query |
+| 14 | Sort Comparator | Beginner | custom ordering for snippet directories |
+| 15 | Selection State Helper | Intermediate | interactive snippet previews and selection state |
+| 16 | Recent Items Tracker | Intermediate | recently opened snippet experiences |
+| 17 | Search Tokenizer | Advanced | smart search boxes with phrase support |
+| 18 | Snippet Summary Formatter | Beginner | small snippet cards with concise context |
+| 19 | Tag Cloud Builder | Intermediate | highlighting top filters from snippet data |
+| 20 | Preview Panel Layout | Advanced | side-by-side browsing for interactive snippets |
+| 21 | Deep Clone Utility | Intermediate | safe deep copies for state management |
+| 22 | Tiny Event Emitter | Intermediate | lightweight event buses for decoupled modules |
+| 23 | Throttle Function | Beginner | scroll and resize handler optimization |
+| 24 | Flat-to-Tree Converter | Advanced | hierarchical menus and category trees |
+| 25 | URL Params Parser | Beginner | reading filter state from the address bar |
+| 26 | Relative Date Formatter | Beginner | displaying how long ago a snippet was created |
+| 27 | Batch Processor | Intermediate | chunked imports and bulk operations |
+| 28 | LRU Cache | Advanced | bounded caches for API responses or computations |
+| 29 | Smart String Truncate | Beginner | safe truncation for snippet cards and previews |
+| 30 | Color Contrast Checker | Intermediate | validating readable text on colored backgrounds |
+| 31 | Promise Pool | Advanced | parallel fetches with bounded concurrency |
+| 32 | CSV Line Parser | Intermediate | lightweight CSV ingestion without external libraries |
+| 33 | Case Converter | Beginner | normalizing naming conventions across codebases |
+| 34 | Intersection Observer Hook | Intermediate | lazy loading images and infinite scroll triggers |
+| 35 | JWT Payload Decoder | Beginner | inspecting token claims for debugging auth flows |
+| 36 | Unique ID Generator | Beginner | generating client-side IDs for optimistic updates |
+| 37 | Pipe and Compose | Intermediate | building data transformation pipelines |
+| 38 | Async Mutex Lock | Advanced | preventing race conditions in concurrent code |
+| 39 | Fuzzy String Matcher | Intermediate | typo-tolerant search suggestions |
+| 40 | Responsive Grid Helper | Beginner | adaptive grid layouts for snippet galleries |
+
+</details>
+
+---
+
 ## 🌟 Main features
 
 - **Fast sharing** — create a snippet with title, code, tags, and language.
-- **100-snippet starter library** — explore a large built-in catalog immediately, even before the database has content.
+- **200-snippet starter library** — explore a large built-in catalog immediately, even before the database has content. Covers 40 practical topics across 5 languages.
 - **Advanced discovery** — search across title, description, tags, code, level, and source with best-match ranking.
 - **Interactive preview** — inspect the active snippet inline from Explore before opening the full page.
 - **Guest-friendly creation** — save snippets without auth directly to local browser storage.
@@ -184,7 +238,7 @@ This repository now includes a small `vercel.json` file so the project is clearl
 
 ## 🔎 Discovery topics
 
-These are the **20 exact topics** prepared for repository discovery and also mirrored in `package.json` keywords:
+These are the **20 exact keywords** prepared for repository discovery and also mirrored in `package.json` keywords:
 
 `codeshare` · `code-snippets` · `snippet-manager` · `nextjs` · `react` · `typescript` · `tailwindcss` · `mongodb` · `mongoose` · `nextauth` · `oauth` · `developer-tools` · `syntax-highlighting` · `app-router` · `full-stack` · `web-app` · `open-source` · `vercel-ready` · `productivity` · `community-platform`
 
@@ -200,7 +254,7 @@ Instead of digging through old files or chat messages, you can keep your best sn
 
 Now it also includes:
 
-- a built-in library of 100 starter snippets,
+- a built-in library of 200 starter snippets across 40 topics and 5 languages,
 - richer search with level/source/tag filters and instant preview,
 - and guest snippet creation that saves only in the browser when you are not signed in.
 
