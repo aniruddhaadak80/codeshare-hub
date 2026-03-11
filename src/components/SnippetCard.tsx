@@ -23,8 +23,10 @@ export default function SnippetCard({ snippet, index = 0 }: SnippetCardProps) {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
-      className="group bg-gray-900 border border-gray-800 rounded-xl p-5 hover:border-indigo-500/50 transition-all duration-200 hover:shadow-lg hover:shadow-indigo-500/5"
+      whileHover={{ y: -6, scale: 1.01 }}
+      className="group relative overflow-hidden rounded-[1.4rem] border border-white/10 bg-slate-900/80 p-5 transition-all duration-300 hover:border-indigo-400/40 hover:shadow-2xl hover:shadow-indigo-950/20"
     >
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-br from-indigo-500/10 via-transparent to-cyan-400/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1 min-w-0">
           <Link href={`/snippet/${snippet._id}`} className="block">
@@ -36,7 +38,7 @@ export default function SnippetCard({ snippet, index = 0 }: SnippetCardProps) {
             <p className="text-sm text-gray-400 mt-1 line-clamp-2">{snippet.description}</p>
           )}
         </div>
-        <span className="ml-3 flex-shrink-0 px-2.5 py-1 text-xs font-mono bg-gray-800 text-indigo-400 rounded-md border border-gray-700">
+        <span className="ml-3 flex-shrink-0 rounded-full border border-indigo-400/20 bg-indigo-500/10 px-2.5 py-1 text-xs font-mono text-indigo-300">
           {snippet.language}
         </span>
       </div>
@@ -49,7 +51,7 @@ export default function SnippetCard({ snippet, index = 0 }: SnippetCardProps) {
         </div>
       )}
 
-      <div className="flex items-center justify-between text-xs text-gray-500 pt-3 border-t border-gray-800">
+      <div className="flex items-center justify-between border-t border-white/10 pt-3 text-xs text-gray-500">
         <div className="flex items-center gap-4">
           <span className="flex items-center gap-1">
             <ThumbsUp className="w-3.5 h-3.5" />

@@ -1,7 +1,48 @@
 import Link from 'next/link';
-import { Code2, Search, Zap, Users, Star, ArrowRight } from 'lucide-react';
+import {
+  ArrowRight,
+  BookMarked,
+  Code2,
+  Globe2,
+  Search,
+  Sparkles,
+  Star,
+  TrendingUp,
+  Users,
+  Zap,
+} from 'lucide-react';
 import SnippetCard from '@/components/SnippetCard';
 import { Snippet } from '@/types';
+
+const highlights = [
+  'Tailwind-powered gradients',
+  'Smooth Framer Motion cards',
+  'Curated community snippets',
+];
+
+const stats = [
+  { value: '50+', label: 'Languages supported' },
+  { value: '24/7', label: 'Snippet inspiration' },
+  { value: '1 hub', label: 'For your best ideas' },
+];
+
+const features = [
+  {
+    icon: Sparkles,
+    title: 'Beautiful snippet reading',
+    desc: 'Elegant cards, glowing accents, and clean spacing keep every code sample easy to scan.',
+  },
+  {
+    icon: Users,
+    title: 'Community energy',
+    desc: 'Discover ideas from other developers, save standouts, and build your own reusable toolbox.',
+  },
+  {
+    icon: BookMarked,
+    title: 'Organized your way',
+    desc: 'Collections, tags, and rich snippet metadata help you keep fast-moving projects under control.',
+  },
+];
 
 async function getTrendingSnippets(): Promise<Snippet[]> {
   try {
@@ -21,80 +62,195 @@ export default async function HomePage() {
   const snippets = await getTrendingSnippets();
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen overflow-hidden">
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 px-4">
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-950/50 via-transparent to-purple-950/30 pointer-events-none" />
-        <div className="max-w-4xl mx-auto text-center relative">
-          <div className="inline-flex items-center gap-2 bg-indigo-950/60 border border-indigo-800/50 rounded-full px-4 py-1.5 text-sm text-indigo-300 mb-6">
-            <Zap className="w-3.5 h-3.5" />
-            Community-first code sharing
-          </div>
-          <h1 className="text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
-            Share code that{' '}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400">
-              matters
-            </span>
-          </h1>
-          <p className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
-            Discover, save, and share reusable code snippets. Build your personal code library and contribute to the developer community.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/explore"
-              className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white px-6 py-3 rounded-xl font-medium transition-colors"
-            >
-              <Search className="w-4 h-4" />
-              Explore Snippets
-            </Link>
-            <Link
-              href="/create"
-              className="inline-flex items-center gap-2 bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-xl font-medium border border-gray-700 transition-colors"
-            >
-              <Code2 className="w-4 h-4" />
-              Share a Snippet
-            </Link>
+      <section className="relative overflow-hidden px-4 pb-20 pt-16 sm:pt-20">
+        <div className="absolute inset-0 bg-grid-pattern opacity-20 pointer-events-none" />
+        <div className="absolute left-[-5%] top-16 h-56 w-56 rounded-full bg-cyan-500/15 blur-3xl animate-float-slow pointer-events-none" />
+        <div className="absolute right-[-4%] top-10 h-72 w-72 rounded-full bg-fuchsia-500/15 blur-3xl animate-float-delayed pointer-events-none" />
+        <div className="absolute bottom-0 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-indigo-500/10 blur-3xl pointer-events-none" />
+        <div className="max-w-6xl mx-auto relative">
+          <div className="glass-panel rounded-[2rem] p-8 sm:p-12 lg:p-14">
+            <div className="grid gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+              <div className="text-center lg:text-left">
+                <div className="inline-flex items-center gap-2 rounded-full border border-indigo-400/30 bg-indigo-500/10 px-4 py-1.5 text-sm text-indigo-200 mb-6 animate-pulse-glow">
+                  <Zap className="h-3.5 w-3.5" />
+                  Animated, colorful, developer-first experience
+                </div>
+                <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-[1.05] text-glow">
+                  Share code in a
+                  <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-indigo-300 to-fuchsia-400">
+                    brighter, bolder hub
+                  </span>
+                </h1>
+                <p className="text-lg sm:text-xl text-slate-300/90 mb-8 max-w-2xl mx-auto lg:mx-0">
+                  Discover, save, and showcase reusable snippets in a lively interface with colorful highlights,
+                  polished cards, and motion that keeps every interaction feeling modern.
+                </p>
+                <div className="flex flex-wrap gap-3 justify-center lg:justify-start mb-8">
+                  {highlights.map((highlight) => (
+                    <div
+                      key={highlight}
+                      className="rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200"
+                    >
+                      {highlight}
+                    </div>
+                  ))}
+                </div>
+                <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                  <Link
+                    href="/explore"
+                    className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 px-6 py-3.5 font-medium text-white shadow-lg shadow-indigo-900/30 transition-transform duration-200 hover:-translate-y-0.5"
+                  >
+                    <Search className="h-4 w-4" />
+                    Explore Snippets
+                  </Link>
+                  <Link
+                    href="/create"
+                    className="inline-flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-slate-900/70 px-6 py-3.5 font-medium text-white transition-colors hover:border-indigo-400/40 hover:bg-slate-900"
+                  >
+                    <Code2 className="h-4 w-4" />
+                    Share a Snippet
+                  </Link>
+                </div>
+              </div>
+              <div className="relative">
+                <div className="rounded-[1.75rem] border border-white/10 bg-slate-950/80 p-6 shadow-2xl shadow-indigo-950/30">
+                  <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                    <div>
+                      <p className="text-sm uppercase tracking-[0.25em] text-cyan-300/80">Live preview</p>
+                      <h2 className="mt-2 text-2xl font-semibold text-white">Snippet showcase</h2>
+                    </div>
+                    <div className="flex gap-2">
+                      <span className="h-3 w-3 rounded-full bg-rose-400" />
+                      <span className="h-3 w-3 rounded-full bg-amber-400" />
+                      <span className="h-3 w-3 rounded-full bg-emerald-400" />
+                    </div>
+                  </div>
+                  <div className="mt-6 space-y-4">
+                    <div className="rounded-2xl border border-indigo-400/20 bg-gradient-to-br from-indigo-500/10 to-cyan-500/10 p-4">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <p className="text-sm text-cyan-200">Community spotlight</p>
+                          <h3 className="mt-1 text-lg font-semibold text-white">Trending snippets, instantly</h3>
+                        </div>
+                        <TrendingUp className="h-5 w-5 text-fuchsia-300" />
+                      </div>
+                      <p className="mt-3 text-sm text-slate-300">
+                        Browse polished code cards with language badges, tags, and quick stats in one glance.
+                      </p>
+                    </div>
+                    <div className="grid grid-cols-3 gap-3">
+                      {stats.map((stat) => (
+                        <div key={stat.label} className="rounded-2xl border border-white/10 bg-white/5 p-4 text-center">
+                          <div className="text-2xl font-bold text-white">{stat.value}</div>
+                          <div className="mt-1 text-xs text-slate-400">{stat.label}</div>
+                        </div>
+                      ))}
+                    </div>
+                    <div className="rounded-2xl border border-fuchsia-400/20 bg-fuchsia-500/10 p-4 text-sm text-fuchsia-100">
+                      <div className="flex items-center gap-2 font-medium">
+                        <Globe2 className="h-4 w-4" />
+                        Built to feel vibrant on every screen
+                      </div>
+                      <p className="mt-2 text-fuchsia-100/80">
+                        The refreshed landing page leans on Tailwind gradients, layered surfaces, and motion-ready UI.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-10 grid gap-4 border-t border-white/10 pt-8 sm:grid-cols-3">
+              {stats.map((stat) => (
+                <div key={stat.label} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+                  <div className="text-3xl font-semibold text-white">{stat.value}</div>
+                  <p className="mt-2 text-sm text-slate-400">{stat.label}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* Features */}
-      <section className="py-16 px-4 border-y border-gray-800">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            { icon: Code2, title: '50+ Languages', desc: 'Syntax highlighting for all major programming languages' },
-            { icon: Users, title: 'Community Driven', desc: 'Upvote, collect, and share snippets with other developers' },
-            { icon: Star, title: 'Smart Collections', desc: 'Organize snippets into public or private collections' },
-          ].map((feature) => (
-            <div key={feature.title} className="text-center">
-              <div className="inline-flex p-3 bg-indigo-600/20 rounded-xl mb-4">
-                <feature.icon className="w-6 h-6 text-indigo-400" />
-              </div>
-              <h3 className="text-lg font-semibold text-white mb-2">{feature.title}</h3>
-              <p className="text-gray-400 text-sm">{feature.desc}</p>
+      <section className="px-4 pb-6">
+        <div className="max-w-6xl mx-auto">
+          <div className="mb-8 flex items-end justify-between gap-4">
+            <div>
+              <p className="text-sm uppercase tracking-[0.3em] text-indigo-300/70">Why it feels better</p>
+              <h2 className="mt-3 text-3xl font-bold text-white">A more expressive developer experience</h2>
             </div>
-          ))}
+            <div className="hidden md:flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300">
+              <Sparkles className="h-4 w-4 text-cyan-300" />
+              Designed to feel colorful without losing focus
+            </div>
+          </div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            {features.map((feature, index) => (
+              <div
+                key={feature.title}
+                className="group rounded-[1.75rem] border border-white/10 bg-slate-900/70 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-indigo-400/30 hover:bg-slate-900"
+              >
+                <div className="mb-5 inline-flex rounded-2xl bg-gradient-to-br from-indigo-500/20 to-fuchsia-500/20 p-3 text-indigo-200">
+                  <feature.icon className="h-6 w-6" />
+                </div>
+                <div className="mb-3 inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-slate-500">
+                  0{index + 1}
+                  <span className="h-px w-10 bg-slate-700" />
+                </div>
+                <h3 className="text-xl font-semibold text-white">{feature.title}</h3>
+                <p className="mt-3 text-sm leading-6 text-slate-400">{feature.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="px-4 py-12">
+        <div className="max-w-6xl mx-auto rounded-[1.75rem] border border-cyan-400/15 bg-gradient-to-r from-cyan-500/10 via-indigo-500/10 to-fuchsia-500/10 px-6 py-5 sm:px-8">
+          <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+            <div>
+              <p className="text-sm uppercase tracking-[0.3em] text-cyan-200/70">Ready to build momentum?</p>
+              <h2 className="mt-2 text-2xl font-semibold text-white">Turn your best code into a shareable library.</h2>
+            </div>
+            <Link
+              href="/explore"
+              className="inline-flex items-center gap-2 self-start rounded-2xl border border-white/10 bg-slate-950/70 px-5 py-3 text-white transition-colors hover:border-cyan-300/40 hover:text-cyan-200"
+            >
+              Join the trend
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Trending Snippets */}
-      <section className="py-16 px-4">
+      <section className="px-4 pb-20 pt-4">
         <div className="max-w-6xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
+          <div className="mb-8 flex items-center justify-between gap-4">
             <div>
-              <h2 className="text-2xl font-bold text-white">Trending Snippets</h2>
-              <p className="text-gray-400 text-sm mt-1">Most popular code snippets this week</p>
+              <div className="inline-flex items-center gap-2 rounded-full border border-indigo-400/20 bg-indigo-500/10 px-3 py-1 text-xs uppercase tracking-[0.25em] text-indigo-200">
+                <Star className="h-3.5 w-3.5" />
+                This week&apos;s highlights
+              </div>
+              <h2 className="mt-4 text-3xl font-bold text-white">Trending Snippets</h2>
+              <p className="mt-2 text-sm text-slate-400">Most popular code snippets in the community right now.</p>
             </div>
-            <Link href="/explore" className="flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 text-sm">
-              View all <ArrowRight className="w-4 h-4" />
+            <Link
+              href="/explore"
+              className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-indigo-300 transition-colors hover:border-indigo-400/30 hover:text-indigo-200"
+            >
+              View all <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
 
           {snippets.length === 0 ? (
-            <div className="text-center py-16 text-gray-500">
-              <Code2 className="w-12 h-12 mx-auto mb-4 opacity-30" />
+            <div className="rounded-[1.75rem] border border-white/10 bg-slate-900/70 py-16 text-center text-gray-500">
+              <Code2 className="mx-auto mb-4 h-12 w-12 opacity-30" />
               <p>No snippets yet. Be the first to share one!</p>
-              <Link href="/create" className="inline-block mt-4 text-indigo-400 hover:text-indigo-300">
+              <Link href="/create" className="mt-4 inline-block text-indigo-400 hover:text-indigo-300">
                 Create a snippet →
               </Link>
             </div>
