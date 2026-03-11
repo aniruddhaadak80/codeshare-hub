@@ -22,8 +22,13 @@ async function getSnippet(id: string): Promise<Snippet | null> {
   }
 }
 
-export default async function SnippetPage({ params }: { params: { id: string } }) {
-  const snippet = await getSnippet(params.id);
+export default async function SnippetPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
+  const snippet = await getSnippet(id);
   if (!snippet) notFound();
 
   const session = await getServerSession(authOptions);

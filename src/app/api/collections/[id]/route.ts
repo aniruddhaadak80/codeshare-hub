@@ -5,10 +5,15 @@ import dbConnect from '@/lib/db';
 import Collection from '@/lib/models/Collection';
 import { getSessionUserId } from '@/lib/session';
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+type RouteContext = {
+  params: Promise<{ id: string }>;
+};
+
+export async function GET(request: NextRequest, { params }: RouteContext) {
   try {
+    const { id } = await params;
     await dbConnect();
-    const collection = await Collection.findById(params.id).lean();
+    const collection = await Collection.findById(id).lean();
     if (!collection) {
       return NextResponse.json({ error: 'Collection not found' }, { status: 404 });
     }
@@ -18,15 +23,16 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: RouteContext) {
   try {
+    const { id } = await params;
     const session = await getServerSession(authOptions);
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     await dbConnect();
-    const collection = await Collection.findById(params.id);
+    const collection = await Collection.findById(id);
     if (!collection) {
       return NextResponse.json({ error: 'Collection not found' }, { status: 404 });
     }
@@ -37,22 +43,23 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     }
 
     const data = await request.json();
-    const updated = await Collection.findByIdAndUpdate(params.id, data, { new: true }).lean();
+    const updated = await Collection.findByIdAndUpdate(id, data, { new: true }).lean();
     return NextResponse.json(updated);
   } catch {
     return NextResponse.json({ error: 'Failed to update collection' }, { status: 500 });
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: RouteContext) {
   try {
+    const { id } = await params;
     const session = await getServerSession(authOptions);
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     await dbConnect();
-    const collection = await Collection.findById(params.id);
+    const collection = await Collection.findById(id);
     if (!collection) {
       return NextResponse.json({ error: 'Collection not found' }, { status: 404 });
     }
@@ -62,7 +69,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    await Collection.findByIdAndDelete(params.id);
+    await Collection.findByIdAndDelete(id);
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: 'Failed to delete collection' }, { status: 500 });

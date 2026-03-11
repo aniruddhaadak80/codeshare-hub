@@ -1,13 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { use, useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { Save } from 'lucide-react';
 import { LANGUAGES } from '@/types';
 import LoadingSpinner from '@/components/LoadingSpinner';
 
-export default function EditPage({ params }: { params: { id: string } }) {
+export default function EditPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = use(params);
   const { data: session, status } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -23,7 +24,7 @@ export default function EditPage({ params }: { params: { id: string } }) {
   });
 
   useEffect(() => {
-    fetch(`/api/snippets/${params.id}`)
+    fetch(`/api/snippets/${id}`)
       .then(r => r.json())
       .then(data => {
         setForm({
@@ -37,7 +38,7 @@ export default function EditPage({ params }: { params: { id: string } }) {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, [params.id]);
+  }, [id]);
 
   if (status === 'loading' || loading) return <LoadingSpinner />;
   if (!session) {
@@ -52,14 +53,14 @@ export default function EditPage({ params }: { params: { id: string } }) {
 
     try {
       const tags = form.tags.split(',').map(t => t.trim()).filter(Boolean);
-      const res = await fetch(`/api/snippets/${params.id}`, {
+      const res = await fetch(`/api/snippets/${id}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...form, tags }),
       });
 
       if (res.ok) {
-        router.push(`/snippet/${params.id}`);
+        router.push(`/snippet/${id}`);
       } else {
         setError('Failed to update snippet. Please try again.');
       }
