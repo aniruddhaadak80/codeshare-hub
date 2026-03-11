@@ -3,6 +3,12 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import Snippet from '@/lib/models/Snippet';
+import { getSessionUserId } from '@/lib/session';
+
+/** Escape special regex characters to prevent ReDoS attacks. */
+function escapeRegex(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -12,16 +18,17 @@ export async function GET(request: NextRequest) {
     const language = searchParams.get('language') || '';
     const tag = searchParams.get('tag') || '';
     const sort = searchParams.get('sort') || 'createdAt';
-    const limit = parseInt(searchParams.get('limit') || '20');
+    const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 100);
     const skip = parseInt(searchParams.get('skip') || '0');
 
-    const query: any = { isPublic: true };
+    const query: Record<string, unknown> = { isPublic: true };
 
     if (q) {
+      const safeQ = escapeRegex(q);
       query.$or = [
-        { title: { $regex: q, $options: 'i' } },
-        { description: { $regex: q, $options: 'i' } },
-        { code: { $regex: q, $options: 'i' } },
+        { title: { $regex: safeQ, $options: 'i' } },
+        { description: { $regex: safeQ, $options: 'i' } },
+        { code: { $regex: safeQ, $options: 'i' } },
       ];
     }
 
@@ -33,7 +40,7 @@ export async function GET(request: NextRequest) {
       query.tags = { $in: [tag] };
     }
 
-    const sortObj: any = {};
+    const sortObj: Record<string, 1 | -1> = {};
     if (sort === 'popular') {
       sortObj.upvotes = -1;
     } else if (sort === 'views') {
@@ -46,7 +53,7 @@ export async function GET(request: NextRequest) {
     const total = await Snippet.countDocuments(query);
 
     return NextResponse.json({ snippets, total });
-  } catch (_error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch snippets' }, { status: 500 });
   }
 }
@@ -63,14 +70,14 @@ export async function POST(request: NextRequest) {
 
     const snippet = new Snippet({
       ...data,
-      authorId: (session.user as any).id || session.user.email,
+      authorId: getSessionUserId(session),
       authorName: session.user.name || 'Anonymous',
       authorImage: session.user.image,
     });
 
     await snippet.save();
     return NextResponse.json(snippet.toObject(), { status: 201 });
-  } catch (_error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to create snippet' }, { status: 500 });
   }
 }

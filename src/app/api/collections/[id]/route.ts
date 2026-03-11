@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import Collection from '@/lib/models/Collection';
+import { getSessionUserId } from '@/lib/session';
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -12,7 +13,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ error: 'Collection not found' }, { status: 404 });
     }
     return NextResponse.json(collection);
-  } catch (_error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch collection' }, { status: 500 });
   }
 }
@@ -30,7 +31,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ error: 'Collection not found' }, { status: 404 });
     }
 
-    const userId = (session.user as any).id || session.user.email;
+    const userId = getSessionUserId(session);
     if (collection.authorId !== userId) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
@@ -38,7 +39,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     const data = await request.json();
     const updated = await Collection.findByIdAndUpdate(params.id, data, { new: true }).lean();
     return NextResponse.json(updated);
-  } catch (_error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to update collection' }, { status: 500 });
   }
 }
@@ -56,14 +57,14 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ error: 'Collection not found' }, { status: 404 });
     }
 
-    const userId = (session.user as any).id || session.user.email;
+    const userId = getSessionUserId(session);
     if (collection.authorId !== userId) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     await Collection.findByIdAndDelete(params.id);
     return NextResponse.json({ success: true });
-  } catch (_error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to delete collection' }, { status: 500 });
   }
 }

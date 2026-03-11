@@ -3,18 +3,19 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import Collection from '@/lib/models/Collection';
+import { getSessionUserId } from '@/lib/session';
 
 export async function GET(_request: NextRequest) {
   try {
     const session = await getServerSession(authOptions);
     await dbConnect();
 
-    const userId = session?.user ? ((session.user as any).id || session.user.email) : null;
+    const userId = session?.user ? getSessionUserId(session) : null;
     const query = userId ? { $or: [{ authorId: userId }, { isPublic: true }] } : { isPublic: true };
 
     const collections = await Collection.find(query).sort({ createdAt: -1 }).lean();
     return NextResponse.json({ collections });
-  } catch (_error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch collections' }, { status: 500 });
   }
 }
@@ -31,13 +32,13 @@ export async function POST(request: NextRequest) {
 
     const collection = new Collection({
       ...data,
-      authorId: (session.user as any).id || session.user.email,
+      authorId: getSessionUserId(session),
       authorName: session.user.name || 'Anonymous',
     });
 
     await collection.save();
     return NextResponse.json(collection.toObject(), { status: 201 });
-  } catch (_error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to create collection' }, { status: 500 });
   }
 }

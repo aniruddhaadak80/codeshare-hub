@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import Snippet from '@/lib/models/Snippet';
 import Vote from '@/lib/models/Vote';
+import { getSessionUserId } from '@/lib/session';
 
 export async function POST(request: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -14,7 +15,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 
     await dbConnect();
     const { type } = await request.json();
-    const userId = (session.user as any).id || session.user.email;
+    const userId = getSessionUserId(session);
 
     const existingVote = await Vote.findOne({ userId, snippetId: params.id });
 
@@ -41,7 +42,7 @@ export async function POST(request: NextRequest, { params }: { params: { id: str
 
     const snippet = await Snippet.findById(params.id).select('upvotes downvotes').lean();
     return NextResponse.json(snippet);
-  } catch (_error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to vote' }, { status: 500 });
   }
 }

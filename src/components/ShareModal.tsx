@@ -15,7 +15,7 @@ export default function ShareModal({ snippetId, title }: ShareModalProps) {
   const [embedCopied, setEmbedCopied] = useState(false);
 
   const shareUrl = typeof window !== 'undefined' ? `${window.location.origin}/snippet/${snippetId}` : '';
-  const embedCode = `<iframe src="${typeof window !== 'undefined' ? window.location.origin : ''}/snippet/${snippetId}/embed" width="100%" height="400" frameborder="0"></iframe>`;
+  const embedCode = `<iframe src="${typeof window !== 'undefined' ? window.location.origin : ''}/snippet/${snippetId}/embed" width="100%" height="400" style="border:none;"></iframe>`;
 
   const copyUrl = async () => {
     await navigator.clipboard.writeText(shareUrl);

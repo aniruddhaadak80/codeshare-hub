@@ -1,6 +1,11 @@
-import { NextAuthOptions } from 'next-auth';
+import { NextAuthOptions, Session } from 'next-auth';
+import { JWT } from 'next-auth/jwt';
 import GithubProvider from 'next-auth/providers/github';
 import GoogleProvider from 'next-auth/providers/google';
+
+interface SessionWithId extends Session {
+  user: Session['user'] & { id?: string };
+}
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -27,11 +32,12 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
-    async session({ session, token }) {
-      if (token && session.user) {
-        (session.user as any).id = token.id || token.sub;
+    async session({ session, token }: { session: Session; token: JWT }) {
+      const s = session as SessionWithId;
+      if (token && s.user) {
+        s.user.id = (token.id as string) || token.sub;
       }
-      return session;
+      return s;
     },
   },
 };

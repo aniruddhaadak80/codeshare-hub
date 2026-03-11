@@ -3,6 +3,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import Snippet from '@/lib/models/Snippet';
+import { getSessionUserId } from '@/lib/session';
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -14,7 +15,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     // Increment views
     await Snippet.findByIdAndUpdate(params.id, { $inc: { views: 1 } });
     return NextResponse.json(snippet);
-  } catch (_error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch snippet' }, { status: 500 });
   }
 }
@@ -32,7 +33,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
       return NextResponse.json({ error: 'Snippet not found' }, { status: 404 });
     }
 
-    const userId = (session.user as any).id || session.user.email;
+    const userId = getSessionUserId(session);
     if (snippet.authorId !== userId) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
@@ -45,7 +46,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     ).lean();
 
     return NextResponse.json(updated);
-  } catch (_error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to update snippet' }, { status: 500 });
   }
 }
@@ -63,14 +64,14 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ error: 'Snippet not found' }, { status: 404 });
     }
 
-    const userId = (session.user as any).id || session.user.email;
+    const userId = getSessionUserId(session);
     if (snippet.authorId !== userId) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
     await Snippet.findByIdAndDelete(params.id);
     return NextResponse.json({ success: true });
-  } catch (_error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to delete snippet' }, { status: 500 });
   }
 }

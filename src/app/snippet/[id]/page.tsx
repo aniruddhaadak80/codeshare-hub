@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
+import { getSessionUserId } from '@/lib/session';
 import CodeBlock from '@/components/CodeBlock';
 import VoteButtons from '@/components/VoteButtons';
 import ShareModal from '@/components/ShareModal';
@@ -26,7 +27,7 @@ export default async function SnippetPage({ params }: { params: { id: string } }
   if (!snippet) notFound();
 
   const session = await getServerSession(authOptions);
-  const userId = session?.user ? ((session.user as any).id || session.user.email) : null;
+  const userId = session?.user ? getSessionUserId(session) : null;
   const isAuthor = userId === snippet.authorId;
 
   const date = new Date(snippet.createdAt).toLocaleDateString('en-US', {
