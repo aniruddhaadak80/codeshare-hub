@@ -13,6 +13,7 @@ export default function CreatePage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [preview, setPreview] = useState(false);
   const [form, setForm] = useState({
     title: '',
@@ -35,6 +36,7 @@ export default function CreatePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setError('');
 
     try {
       const tags = form.tags.split(',').map(t => t.trim()).filter(Boolean);
@@ -48,11 +50,10 @@ export default function CreatePage() {
         const snippet = await res.json();
         router.push(`/snippet/${snippet._id}`);
       } else {
-        alert('Failed to create snippet');
+        setError('Failed to create snippet. Please try again.');
       }
-    } catch (error) {
-      console.error('Failed to create snippet', error);
-      alert('Failed to create snippet');
+    } catch {
+      setError('Failed to create snippet. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -64,6 +65,12 @@ export default function CreatePage() {
         <h1 className="text-3xl font-bold text-white mb-2">Create Snippet</h1>
         <p className="text-gray-400">Share your code with the community</p>
       </div>
+
+      {error && (
+        <div className="mb-4 px-4 py-3 bg-red-900/30 border border-red-700 rounded-xl text-red-400 text-sm">
+          {error}
+        </div>
+      )}
 
       <div className="flex gap-2 mb-6">
         <button

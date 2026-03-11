@@ -12,6 +12,7 @@ export default function EditPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
   const [form, setForm] = useState({
     title: '',
     description: '',
@@ -47,6 +48,7 @@ export default function EditPage({ params }: { params: { id: string } }) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
+    setError('');
 
     try {
       const tags = form.tags.split(',').map(t => t.trim()).filter(Boolean);
@@ -59,11 +61,10 @@ export default function EditPage({ params }: { params: { id: string } }) {
       if (res.ok) {
         router.push(`/snippet/${params.id}`);
       } else {
-        alert('Failed to update snippet');
+        setError('Failed to update snippet. Please try again.');
       }
-    } catch (error) {
-      console.error('Failed to update snippet', error);
-      alert('Failed to update snippet');
+    } catch {
+      setError('Failed to update snippet. Please try again.');
     } finally {
       setSaving(false);
     }
@@ -72,6 +73,11 @@ export default function EditPage({ params }: { params: { id: string } }) {
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-white mb-8">Edit Snippet</h1>
+      {error && (
+        <div className="mb-4 px-4 py-3 bg-red-900/30 border border-red-700 rounded-xl text-red-400 text-sm">
+          {error}
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label className="block text-sm font-medium text-gray-300 mb-1">Title *</label>
