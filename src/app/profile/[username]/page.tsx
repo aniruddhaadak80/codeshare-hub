@@ -17,9 +17,14 @@ async function getUserSnippets(): Promise<Snippet[]> {
   }
 }
 
-export default async function ProfilePage({ params }: { params: { username: string } }) {
+export default async function ProfilePage({
+  params,
+}: {
+  params: Promise<{ username: string }>;
+}) {
+  const { username } = await params;
   const session = await getServerSession(authOptions);
-  const isOwnProfile = session?.user?.name?.toLowerCase().replace(/\s+/g, '-') === params.username;
+  const isOwnProfile = session?.user?.name?.toLowerCase().replace(/\s+/g, '-') === username;
 
   const snippets = isOwnProfile ? await getUserSnippets() : [];
 
@@ -35,7 +40,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
             </div>
           )}
           <div>
-            <h1 className="text-2xl font-bold text-white">{params.username}</h1>
+            <h1 className="text-2xl font-bold text-white">{username}</h1>
             {isOwnProfile && session?.user?.email && (
               <p className="text-gray-400 text-sm mt-1">{session.user.email}</p>
             )}
@@ -47,7 +52,7 @@ export default async function ProfilePage({ params }: { params: { username: stri
       </div>
 
       <h2 className="text-xl font-bold text-white mb-4">
-        {isOwnProfile ? 'My Snippets' : `Snippets by ${params.username}`}
+          {isOwnProfile ? 'My Snippets' : `Snippets by ${username}`}
       </h2>
 
       {snippets.length === 0 ? (

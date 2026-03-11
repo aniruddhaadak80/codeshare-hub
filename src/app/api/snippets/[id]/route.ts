@@ -5,30 +5,36 @@ import dbConnect from '@/lib/db';
 import Snippet from '@/lib/models/Snippet';
 import { getSessionUserId } from '@/lib/session';
 
-export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
+type RouteContext = {
+  params: Promise<{ id: string }>;
+};
+
+export async function GET(request: NextRequest, { params }: RouteContext) {
   try {
+    const { id } = await params;
     await dbConnect();
-    const snippet = await Snippet.findById(params.id).lean();
+    const snippet = await Snippet.findById(id).lean();
     if (!snippet) {
       return NextResponse.json({ error: 'Snippet not found' }, { status: 404 });
     }
     // Increment views
-    await Snippet.findByIdAndUpdate(params.id, { $inc: { views: 1 } });
+    await Snippet.findByIdAndUpdate(id, { $inc: { views: 1 } });
     return NextResponse.json(snippet);
   } catch {
     return NextResponse.json({ error: 'Failed to fetch snippet' }, { status: 500 });
   }
 }
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(request: NextRequest, { params }: RouteContext) {
   try {
+    const { id } = await params;
     const session = await getServerSession(authOptions);
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     await dbConnect();
-    const snippet = await Snippet.findById(params.id);
+    const snippet = await Snippet.findById(id);
     if (!snippet) {
       return NextResponse.json({ error: 'Snippet not found' }, { status: 404 });
     }
@@ -40,7 +46,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
     const data = await request.json();
     const updated = await Snippet.findByIdAndUpdate(
-      params.id,
+      id,
       { ...data, updatedAt: new Date() },
       { new: true }
     ).lean();
@@ -51,15 +57,16 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
-export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(request: NextRequest, { params }: RouteContext) {
   try {
+    const { id } = await params;
     const session = await getServerSession(authOptions);
     if (!session?.user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     await dbConnect();
-    const snippet = await Snippet.findById(params.id);
+    const snippet = await Snippet.findById(id);
     if (!snippet) {
       return NextResponse.json({ error: 'Snippet not found' }, { status: 404 });
     }
@@ -69,7 +76,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
     }
 
-    await Snippet.findByIdAndDelete(params.id);
+    await Snippet.findByIdAndDelete(id);
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json({ error: 'Failed to delete snippet' }, { status: 500 });
