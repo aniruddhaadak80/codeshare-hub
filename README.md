@@ -35,9 +35,7 @@
 - Save snippets before they get lost in old chats, notes, or random files.
 - Search and explore shared code with level, source, language, and quick-tag filters.
 - Group snippets into collections when a project grows.
-- Use the built-in starter library with 100 ready-to-browse snippets.
-- Sign in with GitHub or Google and start quickly, or save snippets locally without auth.
-- Share code in a clean format with syntax highlighting and voting.
+
 
 ---
 
@@ -80,7 +78,7 @@ flowchart TD
 | Layer | Tools |
 | --- | --- |
 | Frontend | Next.js App Router, React 18, TypeScript |
-| Styling | Tailwind CSS |
+| Styling | Tailwind CSS with layered gradients and glassmorphism-inspired panels |
 | Auth | NextAuth.js with GitHub and Google sign-in |
 | Data | MongoDB + Mongoose |
 | UI touches | Lucide React, Framer Motion, React Syntax Highlighter |
@@ -100,6 +98,16 @@ flowchart TD
 - **Collections** — keep related snippets together.
 - **Simple profile pages** — see your own shared work in one place.
 - **Modern auth** — sign in with providers people already use.
+- **Colorful landing experience** — gradients, glowing surfaces, and motion make the homepage feel more lively.
+
+---
+
+## 🎨 Updated visual direction
+
+- **Tailwind CSS** powers the refreshed gradients, glass panels, spacing, and colorful dark theme.
+- **Framer Motion** adds soft motion to navigation and snippet cards for a smoother feel.
+- **Lucide React** keeps icons crisp and consistent across feature highlights and calls to action.
+- The refreshed homepage is designed to feel more animated and welcoming while staying readable for developers.
 
 ---
 

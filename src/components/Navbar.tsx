@@ -15,12 +15,14 @@ export default function Navbar() {
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="sticky top-0 z-50 bg-gray-900/80 backdrop-blur-md border-b border-gray-800"
+      className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/75 backdrop-blur-xl"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center gap-2 text-xl font-bold text-indigo-400">
-            <Code2 className="w-6 h-6" />
+          <Link href="/" className="flex items-center gap-2 text-xl font-bold text-indigo-300">
+            <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400/20 via-indigo-500/30 to-fuchsia-500/20 text-indigo-200 shadow-lg shadow-indigo-950/30">
+              <Code2 className="w-5 h-5" />
+            </span>
             <span>CodeShare Hub</span>
           </Link>
 
@@ -66,14 +68,17 @@ export default function Navbar() {
             ) : (
               <Link
                 href="/login"
-                className="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+                className="rounded-xl bg-gradient-to-r from-indigo-500 via-violet-500 to-fuchsia-500 px-4 py-2 text-sm font-medium text-white transition-transform duration-200 hover:-translate-y-0.5"
               >
                 Sign in
               </Link>
             )}
           </div>
 
-          <button className="md:hidden" onClick={() => setMenuOpen(!menuOpen)}>
+          <button
+            className="md:hidden rounded-xl border border-white/10 bg-white/5 p-2"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
             {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
@@ -83,7 +88,7 @@ export default function Navbar() {
         <motion.div
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
-          className="md:hidden bg-gray-900 border-t border-gray-800 px-4 py-4 flex flex-col gap-4"
+          className="md:hidden border-t border-white/10 bg-slate-950/95 px-4 py-4 flex flex-col gap-4"
         >
           <Link href="/explore" className="text-gray-300 hover:text-white" onClick={() => setMenuOpen(false)}>Explore</Link>
           {session && (
