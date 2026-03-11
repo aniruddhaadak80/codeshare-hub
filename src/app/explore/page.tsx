@@ -203,7 +203,7 @@ function ExploreContent() {
         <div className="flex flex-wrap items-center gap-3 mb-3">
           <span className="inline-flex items-center gap-2 bg-indigo-950/60 border border-indigo-800/50 rounded-full px-3 py-1 text-sm text-indigo-300">
             <Layers3 className="w-4 h-4" />
-            100 library snippets + community + local browser saves
+            200 library snippets + community + local browser saves
           </span>
         </div>
         <h1 className="text-3xl font-bold text-white mb-2">Explore Snippets</h1>
