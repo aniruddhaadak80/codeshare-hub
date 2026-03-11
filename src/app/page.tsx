@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import SnippetCard from '@/components/SnippetCard';
 import { Snippet } from '@/types';
+import { getLibraryTrendingSnippets } from '@/lib/snippet-library';
 
 const highlights = [
   'Tailwind-powered gradients',
@@ -71,11 +72,11 @@ async function getTrendingSnippets(): Promise<Snippet[]> {
     const res = await fetch(`${baseUrl}/api/snippets?sort=popular&limit=6`, {
       cache: 'no-store',
     });
-    if (!res.ok) return [];
+    if (!res.ok) return getLibraryTrendingSnippets(6);
     const data = await res.json();
-    return data.snippets || [];
+    return data.snippets?.length ? data.snippets : getLibraryTrendingSnippets(6);
   } catch {
-    return [];
+    return getLibraryTrendingSnippets(6);
   }
 }
 
@@ -184,33 +185,7 @@ export default async function HomePage() {
       </section>
 
       {/* Features */}
-      <section className="px-4 pb-6">
-        <div className="max-w-6xl mx-auto">
-          <div className="mb-8 flex items-end justify-between gap-4">
-            <div>
-              <p className="text-sm uppercase tracking-[0.3em] text-indigo-300/70">Why it feels better</p>
-              <h2 className="mt-3 text-3xl font-bold text-white">A more expressive developer experience</h2>
-            </div>
-            <div className="hidden md:flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-300">
-              <Sparkles className="h-4 w-4 text-cyan-300" />
-              Designed to feel colorful without losing focus
-            </div>
-          </div>
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-            {features.map((feature, index) => (
-              <div
-                key={feature.title}
-                className="group rounded-[1.75rem] border border-white/10 bg-slate-900/70 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-indigo-400/30 hover:bg-slate-900"
-              >
-                <div className="mb-5 inline-flex rounded-2xl bg-gradient-to-br from-indigo-500/20 to-fuchsia-500/20 p-3 text-indigo-200">
-                  <feature.icon className="h-6 w-6" />
-                </div>
-                <div className="mb-3 inline-flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-slate-500">
-                  0{index + 1}
-                  <span className="h-px w-10 bg-slate-700" />
-                </div>
-                <h3 className="text-xl font-semibold text-white">{feature.title}</h3>
-                <p className="mt-3 text-sm leading-6 text-slate-400">{feature.desc}</p>
+
               </div>
             ))}
           </div>
