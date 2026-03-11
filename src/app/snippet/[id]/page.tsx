@@ -8,12 +8,13 @@ import VoteButtons from '@/components/VoteButtons';
 import ShareModal from '@/components/ShareModal';
 import TagBadge from '@/components/TagBadge';
 import DeleteButton from '@/components/DeleteButton';
+import { getBaseUrl } from '@/lib/getBaseUrl';
 import { Eye, Clock, User, Edit } from 'lucide-react';
 import { Snippet } from '@/types';
 
 async function getSnippet(id: string): Promise<Snippet | null> {
   try {
-    const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
+    const baseUrl = getBaseUrl();
     const res = await fetch(`${baseUrl}/api/snippets/${id}`, { cache: 'no-store' });
     if (!res.ok) return null;
     return res.json();
