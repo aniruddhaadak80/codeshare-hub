@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import Snippet from '@/lib/models/Snippet';
 import { getSessionUserId } from '@/lib/session';
+import { parseBoundedInt, pickSnippetInput } from '@/lib/snippet-input';
 
 /** Escape special regex characters to prevent ReDoS attacks. */
 function escapeRegex(str: string): string {
@@ -18,8 +19,9 @@ export async function GET(request: NextRequest) {
     const language = searchParams.get('language') || '';
     const tag = searchParams.get('tag') || '';
     const sort = searchParams.get('sort') || 'createdAt';
-    const limit = Math.min(parseInt(searchParams.get('limit') || '20'), 100);
-    const skip = parseInt(searchParams.get('skip') || '0');
+    // A crafted query string must not be able to make the driver throw.
+    const limit = Math.max(1, parseBoundedInt(searchParams.get('limit'), 20, 100));
+    const skip = parseBoundedInt(searchParams.get('skip'), 0, Number.MAX_SAFE_INTEGER);
 
     const query: Record<string, unknown> = { isPublic: true };
 
@@ -68,8 +70,10 @@ export async function POST(request: NextRequest) {
     await dbConnect();
     const data = await request.json();
 
+    // Only the content fields come from the client. The vote counters, the
+    // view counter and the author fields are owned by the server.
     const snippet = new Snippet({
-      ...data,
+      ...pickSnippetInput(data),
       authorId: getSessionUserId(session),
       authorName: session.user.name || 'Anonymous',
       authorImage: session.user.image,
