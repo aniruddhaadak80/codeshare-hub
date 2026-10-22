@@ -4,6 +4,7 @@ import { authOptions } from '@/lib/auth';
 import dbConnect from '@/lib/db';
 import Snippet from '@/lib/models/Snippet';
 import { getSessionUserId } from '@/lib/session';
+import { pickSnippetInput } from '@/lib/snippet-input';
 
 type RouteContext = {
   params: Promise<{ id: string }>;
@@ -45,9 +46,11 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
     }
 
     const data = await request.json();
+    // The vote counters, the view counter and the author fields stay under
+    // the control of the server.
     const updated = await Snippet.findByIdAndUpdate(
       id,
-      { ...data, updatedAt: new Date() },
+      { ...pickSnippetInput(data), updatedAt: new Date() },
       { new: true }
     ).lean();
 
