@@ -350,7 +350,7 @@ function ExploreContent() {
                   <p className="text-gray-400 max-w-2xl">{selectedSnippet.description}</p>
                 </div>
                 <Link
-                  href={selectedSnippet.href || `/snippet/${selectedSnippet._id}`}
+                  href={(selectedSnippet.href && /^https?:\/\/|^\//.test(selectedSnippet.href)) ? selectedSnippet.href : `/snippet/${selectedSnippet._id}`}
                   className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2.5 text-sm font-medium transition-colors"
                 >
                   <Sparkles className="w-4 h-4" />

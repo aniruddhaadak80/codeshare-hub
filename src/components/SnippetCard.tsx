@@ -31,7 +31,7 @@ export default function SnippetCard({ snippet, index = 0, onPreview }: SnippetCa
       <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-br from-indigo-500/10 via-transparent to-cyan-400/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1 min-w-0">
-          <Link href={href} className="block">
+          <Link href={/^https?:\/\/|^\//.test(href) ? href : '#'} className="block">
             <h3 className="text-base font-semibold text-white group-hover:text-indigo-400 transition-colors truncate">
               {snippet.title}
             </h3>
