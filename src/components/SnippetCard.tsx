@@ -6,6 +6,18 @@ import { ThumbsUp, ThumbsDown, Eye, Clock } from 'lucide-react';
 import { Snippet } from '@/types';
 import TagBadge from './TagBadge';
 
+/** Only allow http(s) URLs and root-relative paths. Everything else is rejected. */
+function safeHref(href: string | null | undefined): string | null {
+  if (!href) return null;
+  try {
+    const u = new URL(href, 'https://localhost');
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') return null;
+    return href;
+  } catch {
+    return null;
+  }
+}
+
 interface SnippetCardProps {
   snippet: Snippet;
   index?: number;
@@ -18,7 +30,7 @@ export default function SnippetCard({ snippet, index = 0, onPreview }: SnippetCa
     day: 'numeric',
     year: 'numeric',
   });
-  const href = snippet.href || `/snippet/${snippet._id}`;
+  const href = safeHref(snippet.href) ?? `/snippet/${snippet._id}`;
 
   return (
     <motion.div
@@ -31,7 +43,7 @@ export default function SnippetCard({ snippet, index = 0, onPreview }: SnippetCa
       <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-br from-indigo-500/10 via-transparent to-cyan-400/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
       <div className="flex items-start justify-between mb-3">
         <div className="flex-1 min-w-0">
-          <Link href={/^https?:\/\/|^\//.test(href) ? href : '#'} className="block">
+          <Link href={href} className="block">
             <h3 className="text-base font-semibold text-white group-hover:text-indigo-400 transition-colors truncate">
               {snippet.title}
             </h3>
