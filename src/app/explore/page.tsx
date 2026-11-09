@@ -22,6 +22,18 @@ const SOURCE_OPTIONS: Array<{ value: 'all' | NonNullable<Snippet['source']>; lab
   { value: 'local', label: 'Local browser' },
 ];
 
+/** Only allow http(s) URLs and root-relative paths. Everything else is rejected. */
+function safeHref(href: string | null | undefined): string | null {
+  if (!href) return null;
+  try {
+    const u = new URL(href, 'https://localhost');
+    if (u.protocol !== 'http:' && u.protocol !== 'https:') return null;
+    return href;
+  } catch {
+    return null;
+  }
+}
+
 const normalize = (value: string) => value.toLowerCase();
 
 const splitSearchTerms = (value: string) => {
@@ -350,7 +362,7 @@ function ExploreContent() {
                   <p className="text-gray-400 max-w-2xl">{selectedSnippet.description}</p>
                 </div>
                 <Link
-                  href={(selectedSnippet.href && /^https?:\/\/|^\//.test(selectedSnippet.href)) ? selectedSnippet.href : `/snippet/${selectedSnippet._id}`}
+                  href={safeHref(selectedSnippet.href) ?? `/snippet/${selectedSnippet._id}`}
                   className="inline-flex items-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2.5 text-sm font-medium transition-colors"
                 >
                   <Sparkles className="w-4 h-4" />
